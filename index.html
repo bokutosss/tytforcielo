@@ -317,7 +317,9 @@
 <section class="card" id="letter">
   <h2>I'm Sorry, Cielo 💌</h2>
   <div class="letter">
-    <p>hi my cielo alam ko yung naging pag kakamali kong nagawa sayo alam ko wala kapang gana kausapin ako niyan kasi super naging makulit me sa live kanina, alam ko rin need mo ng space para kumalma ka at mawala ng onti yung nafefeel mo saking inis sorry talaga sa mga nasabi ko kanina alam ko hindi ko na kayang bawain lahat yun pero pinag sisishan ko lahat ng yun, sorry talaga napafeel ko sayo yung ganong pakiramdam kanina naiintindihan kita ng sobra sa lahat ng nafefeel mo now sa mga nagawa ko tatanggapin ko lahat ng consequence sa lahat ng mga nagawa ko sorry talaga sana mapatawad mo me i love you so much cielo, rest muna u niyan usap po us kapag ready kana later saka wag mo kalimutan kumain ka ng dinner or mag bread ka wag papagutom diyan</p>
+    <p>hi my cielo alam ko yung naging pag-kakamali kong nagawa sayo, alam ko wala ka pang gana kausapin ako niyan kasi super naging makulit ako sa live kanina. alam ko rin na kailangan mo ng space para kumalma at mag-isip. ang goal ko lang sa page na ito ay ipakita sa'yo na mahalaga ka at hindi ko ginusto na masaktan ka.</p>
+    <p>kung may mga salita akong nasabi na nakasakit sa'yo, sorry. hindi ko sinasadya na gawing mas mahirap ang nararamdaman mo. and kahit pa ngayon ay malayo sa'yo ang puso ko, gusto kong malaman mo na mahalaga kang tao at deserve mo ng pagmamahal, katahimikan, at respeto.</p>
+    <p>take your time, cielo. no pressure, no rush. kung kailangan mo ng pahinga, ibigay mo sa sarili mo. hindi ko ipipilit ang kahit ano. gusto ko lang na alalahanin mo na hindi ka nag-iisa sa damdamin mo at deserve mo ng mahinahon at masayang araw.</p>
   </div>
   <p class="small">No pressure to reply. Your feelings and boundaries matter. ♡</p>
 </section>
@@ -436,14 +438,20 @@ function playWinSound() {
   [523.25, 659.25, 783.99].forEach((note, i) => playTone(note, 0.16, 'triangle', 0.06, i * 0.08));
 }
 
+function stopMusic() {
+  if (ambientTimer) {
+    clearInterval(ambientTimer);
+    ambientTimer = null;
+  }
+}
+
 function toggleMusic() {
   const button = document.getElementById('musicButton');
   const ctx = ensureAudio();
   if (!ctx) return;
 
   if (musicOn) {
-    clearInterval(ambientTimer);
-    ambientTimer = null;
+    stopMusic();
     musicOn = false;
     button.textContent = 'Play music 🎵';
     return;
@@ -489,8 +497,8 @@ function makeTarget() {
   target.textContent = heart;
 
   const size = randomBetween(34, 60);
-  const x = randomBetween(52, gameEl.clientWidth - 52);
-  const y = randomBetween(52, gameEl.clientHeight - 52);
+  const x = randomBetween(52, Math.max(52, gameEl.clientWidth - 52));
+  const y = randomBetween(52, Math.max(52, gameEl.clientHeight - 52));
   const dx = randomBetween(-1.4, 1.4);
   const dy = randomBetween(-1.4, 1.4);
 
@@ -537,6 +545,11 @@ function hitTarget(target) {
 function winRound() {
   gameStarted = false;
   clearInterval(countdownId);
+  countdownId = null;
+  if (animationFrameId) {
+    cancelAnimationFrame(animationFrameId);
+    animationFrameId = null;
+  }
   playWinSound();
 
   const banner = document.createElement('div');
@@ -588,6 +601,7 @@ function animateTargets() {
 
 function startGame() {
   ensureAudio();
+
   score = 0;
   combo = 1;
   timer = 30;
@@ -597,15 +611,23 @@ function startGame() {
   msgEl.textContent = 'Tap the hearts! 💗';
 
   gameStarted = true;
+
+  if (animationFrameId) {
+    cancelAnimationFrame(animationFrameId);
+    animationFrameId = null;
+  }
+
+  clearInterval(countdownId);
+  countdownId = null;
+
   gameEl.querySelectorAll('.target').forEach(el => el.remove());
   gameEl.querySelectorAll('.burst').forEach(el => el.remove());
   const banner = gameEl.querySelector('.game-end');
   if (banner) banner.remove();
 
   spawnTargets();
-  animateTargets();
+  animationFrameId = requestAnimationFrame(animateTargets);
 
-  clearInterval(countdownId);
   countdownId = setInterval(() => {
     if (!gameStarted) return;
     timer -= 1;
@@ -614,6 +636,11 @@ function startGame() {
     if (timer <= 0) {
       gameStarted = false;
       clearInterval(countdownId);
+      countdownId = null;
+      if (animationFrameId) {
+        cancelAnimationFrame(animationFrameId);
+        animationFrameId = null;
+      }
       msgEl.textContent = 'Time is up, but your heart still matters. 💕';
       const banner = document.createElement('div');
       banner.className = 'game-end';
