@@ -1,1 +1,89 @@
 
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>For Cielo ♡</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;padding:20px;font-family:Arial,sans-serif;color:#704b68;text-align:center;background:linear-gradient(135deg,#ffe0ed,#e8dcff);min-height:100vh}
+.card{max-width:650px;margin:20px auto;padding:28px 22px;background:#ffffffdc;border-radius:25px;box-shadow:0 8px 30px #b88aaf33}
+h1{font-size:42px;color:#d65d96}
+h2{color:#c75b91}
+p{line-height:1.8}
+button{border:0;border-radius:25px;padding:12px 20px;background:#d65d96;color:white;font-weight:bold;font-size:16px;cursor:pointer}
+.letter{background:#fff5fa;padding:18px;border-radius:18px;text-align:left}
+#game{height:260px;position:relative;overflow:hidden;background:#f8e8ff;border:2px dashed #e4a7ce;border-radius:18px;margin:18px 0}
+.heart{position:absolute;background:none;color:#d65d96;font-size:30px;padding:4px}
+.small{font-size:13px;color:#997e9b}
+</style>
+</head>
+<body>
+<section class="card">
+<div style="font-size:45px">💗</div>
+<p> A LITTLE PAGE MADE WITH CARE </p>
+<h1>For Cielo ♡</h1>
+<p>Hi, Cielo. I made this little space just for you. 🌷</p>
+<button onclick="document.getElementById('letter').scrollIntoView({behavior:'smooth'})">Open your letter ♡</button>
+</section>
+
+<section class="card" id="letter">
+<h2>I'm Sorry, Cielo 💌</h2>
+<div class="letter">
+<p>Hi, Cielo. I'm sorry for the times I hurt you and for the things I could have handled better. I know that saying sorry doesn't undo what happened.</p>
+<p>I care about you, and I want to learn from my mistakes through my actions, not just my words. You deserve kindness, honesty, patience, and peace.</p>
+<p>I'm sorry if I made things heavier when you needed comfort. Hindi mo kailangang mag-reply agad, at hindi mo kailangang patawarin ako dahil lang humingi ako ng sorry.</p>
+<p>I just wanted to say this sincerely, without putting pressure on you. I hope you're taking care of yourself. You deserve gentle days and reasons to smile. ♡</p>
+<p>With care,<br><b>Reyster</b></p>
+</div>
+<p class="small">No pressure to reply. Your feelings and boundaries matter. ♡</p>
+</section>
+
+<section class="card">
+<p>✨ A TINY COMFORT ARCADE ✨</p>
+<h2>Catch the Hearts!</h2>
+<p>Tap the hearts to collect a little happiness. 💕</p>
+<h3>Hearts collected: <span id="score">0</span></h3>
+<div id="game"></div>
+<p id="msg">You deserve softness and peace. ♡</p>
+<button onclick="startGame()">Play Again 💗</button>
+</section>
+
+<p class="small">Made with care for Cielo ♡</p>
+<script>
+let score=0;
+const messages=[
+"You deserve softness and peace. ♡",
+"One breath at a time. 🌷",
+"Please remember to take care of yourself. 💗",
+"Small joys still count. ✨",
+"Sending a little warmth your way. 💕"
+];
+function startGame(){
+score=0;
+document.getElementById('score').textContent=score;
+const game=document.getElementById('game');
+game.innerHTML='';
+document.getElementById('msg').textContent='Tap the hearts! 💗';
+for(let i=0;i<8;i++){
+const b=document.createElement('button');
+b.className='heart';
+b.textContent=['💗','💖','💕','💓'][i%4];
+b.style.left=Math.random()*82+'%';
+b.style.top=Math.random()*78+'%';
+b.onclick=function(){
+score++;
+document.getElementById('score').textContent=score;
+document.getElementById('msg').textContent=messages[Math.floor(Math.random()*messages.length)];
+b.remove();
+if(!game.querySelector('button'))game.innerHTML='<p style="padding:65px 8px">You collected all the hearts! 💗</p>';
+};
+game.appendChild(b);
+}
+}
+startGame();
+</script>
+</body>
+</html>
